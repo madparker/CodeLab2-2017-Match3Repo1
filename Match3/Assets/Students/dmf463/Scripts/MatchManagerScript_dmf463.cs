@@ -26,7 +26,7 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
             }
         }
         else return base.GridHasMatch();
-        Debug.Log("match = "  + match);
+        //Debug.Log("match = "  + match);
         return match;
     }
 
