@@ -32,7 +32,7 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
 
     public override int RemoveMatches()
     {
-        int verticalNumRemoved = 0;
+        int numRemoved = 0;
 
         //cycle through row first... 
         for (int x = 0; x < gameManager.gridWidth; x++)
@@ -61,13 +61,13 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
 
                             gameManager.gridArray[x, i] = null;
                             //record number of items removed
-                            verticalNumRemoved++;
+                            numRemoved++;
                         }
                     }
                 }
             }
         }
-        if(verticalNumRemoved != 0) return verticalNumRemoved;
+        if(numRemoved != 0) return numRemoved;
         else return base.RemoveMatches();
     }
 
