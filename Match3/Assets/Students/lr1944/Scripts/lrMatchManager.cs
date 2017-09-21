@@ -14,6 +14,8 @@ public class lrMatchManager : MatchManagerScript {
 
 			for (int y = 0; y < gameManager.gridHeight; y++) {
 
+				// added gridHasVerticalMatch check
+
 				if (y < gameManager.gridHeight - 2) {
 					
 					hasMatch = hasMatch || GridHasVerticalMatch(x, y);
@@ -26,6 +28,8 @@ public class lrMatchManager : MatchManagerScript {
 		return hasMatch;
 
 	}
+
+	// new function to check if grid has vertical matches
 
 	public bool GridHasVerticalMatch (int x, int y) {
 
