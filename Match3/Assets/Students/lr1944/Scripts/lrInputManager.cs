@@ -29,7 +29,7 @@ public class lrInputManager : InputManagerScript {
 
 					//check if these two are length 1 away, then evaluate Token exchange
 
-					// fixed calculation
+					// fixed calculation for distance of tokens
 
 					if(Mathf.Abs(pos1.x - pos2.x) + Mathf.Abs(pos1.y - pos2.y) == 1){
 						//setup token exchange will try to swap the two items; if this doesn't make a match, move them back
