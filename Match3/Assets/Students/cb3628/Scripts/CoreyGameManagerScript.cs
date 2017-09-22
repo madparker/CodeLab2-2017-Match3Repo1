@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManagerScript : MonoBehaviour {
+public class CoreyGameManagerScript : MonoBehaviour {
 
 	public int gridWidth = 8;
 	public int gridHeight = 8;
@@ -24,7 +24,7 @@ public class GameManagerScript : MonoBehaviour {
 		tokenTypes = (Object[])Resources.LoadAll("_Core/Tokens/"); //grabbing prefabs
 		gridArray = new GameObject[gridWidth, gridHeight]; //creating the grid
 		MakeGrid(); //populating the grid
-		matchManager = GetComponent<MatchManagerScript>(); //assigning scripts to variables
+		matchManager = GetComponent<VerticalMatchManagerScript>(); //assigning scripts to variables
 		inputManager = GetComponent<InputManagerScript>();
 		repopulateManager = GetComponent<RepopulateScript>();
 		moveTokenManager = GetComponent<MoveTokensScript>();
