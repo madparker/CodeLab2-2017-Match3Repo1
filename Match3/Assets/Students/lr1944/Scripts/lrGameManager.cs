@@ -6,41 +6,92 @@ public class lrGameManager : GameManagerScript {
 
 	protected lrMatchManager lrMatchMan;
 
+
+
 	public override void Start () {
 		tokenTypes = (Object[])Resources.LoadAll("_Core/Tokens/"); //grabbing prefabs
 		gridArray = new GameObject[gridWidth, gridHeight]; //creating the grid
-		MakeGrid(); //populating the grid
+
 		matchManager = GetComponent<MatchManagerScript>(); //assigning scripts to variables
 		inputManager = GetComponent<InputManagerScript>();
 		repopulateManager = GetComponent<RepopulateScript>();
 		moveTokenManager = GetComponent<MoveTokensScript>();
 		lrMatchMan = GetComponent<lrMatchManager> ();
+
+		MakeGridNew(); //populating the grid
+
+
 	}
 	
 
-	public override void Update(){
-		if(!GridHasEmpty()){ //if grid is fully populated
-			if(lrMatchMan.GridHasMatch()){ //if there are matches
-				lrMatchMan.RemoveMatches(); //remove the matches
-			} else {
-				inputManager.SelectToken(); //allow token to be selected
-			}
-		} else { //if grid not fully populated
-			if(!moveTokenManager.move){ //if token movement is false
-				moveTokenManager.SetupTokenMove(); //set it true so they can fill empty space
-			}
-			if(!moveTokenManager.MoveTokensToFillEmptySpaces()){ //if is false
-				repopulateManager.AddNewTokensToRepopulateGrid(); //and there are still free spaces, allow it to populate
+
+	void MakeGridNew() {
+		grid = new GameObject("TokenGrid");
+		for(int x = 0; x < gridWidth; x++){
+			for(int y = 0; y < gridHeight; y++){
+				AddTokenToPosInGridNew(x, y, grid);
+
+
 			}
 		}
 	}
 
-	void MakeGrid() {
-		grid = new GameObject("TokenGrid");
-		for(int x = 0; x < gridWidth; x++){
-			for(int y = 0; y < gridHeight; y++){
-				AddTokenToPosInGrid(x, y, grid);
-			}
+
+	//adds random token types to specific positions in the grid
+	public void AddTokenToPosInGridNew(int x, int y, GameObject parent){
+		Vector3 position = GetWorldPositionFromGridPosition(x, y); 
+
+		int rnd = Random.Range (0, tokenTypes.Length);
+			
+		GameObject token = 
+			//grabbing random token types
+			Instantiate(tokenTypes[rnd], position, Quaternion.identity) as GameObject;
+		token.transform.parent = parent.transform;
+		gridArray[x, y] = token;
+
+		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
+			rnd = (rnd + 1) % tokenTypes.Length;
+			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
+
 		}
+
+		if (y>1 && lrMatchMan.GridHasVerticalMatch(x,y-2)) {
+			rnd = (rnd + 1) % tokenTypes.Length;
+			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
+		}
+
+//		if (x > 1) {
+//			
+//			for (lrMatchMan.GridHasHorizontalMatch(x,y)) {
+//				Destroy (token);
+//				gridArray [x, y] = null;
+//				GameObject tokenNew = 
+//					//grabbing random token types
+//					Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 
+//						position, 
+//						Quaternion.identity) as GameObject;
+//				token.transform.parent = parent.transform;
+//				gridArray[x, y] = tokenNew;
+//			}
+//			
+//		}
+//
+//		if (y > 1) {
+//			for (lrMatchMan.GridHasVerticalMatch(x,y)) {
+//				Destroy (token);
+//				gridArray [x, y] = null;
+//				GameObject tokenNew = 
+//					//grabbing random token types
+//					Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 
+//						position, 
+//						Quaternion.identity) as GameObject;
+//				token.transform.parent = parent.transform;
+//				gridArray[x, y] = tokenNew;
+//			}
+//		}
+
+
 	}
+
+
 }

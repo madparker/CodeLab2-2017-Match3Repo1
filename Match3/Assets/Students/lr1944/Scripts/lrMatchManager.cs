@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class lrMatchManager : MatchManagerScript {
 
+	void Awake() {
+		gameManager = GetComponent<GameManagerScript>();
+	}
+
 
 	public override bool GridHasMatch (){
 	
