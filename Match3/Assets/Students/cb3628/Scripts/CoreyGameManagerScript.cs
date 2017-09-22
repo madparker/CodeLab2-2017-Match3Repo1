@@ -9,10 +9,10 @@ public class CoreyGameManagerScript : MonoBehaviour {
 
 	//references to other managers
 	//these can only be accessed by code in this class, or class derived from this class
-	protected MatchManagerScript matchManager;
-	protected InputManagerScript inputManager;
-	protected RepopulateScript repopulateManager;
-	protected MoveTokensScript moveTokenManager;
+	protected VerticalMatchManagerScript matchManager;
+	protected CoreyInputManagerScript inputManager;
+	protected CoreyRepopulateScript repopulateManager;
+	protected CoreyMoveTokensScript moveTokenManager;
 
 	public GameObject grid;  
 	public  GameObject[,] gridArray; //2D array for grid
@@ -25,9 +25,9 @@ public class CoreyGameManagerScript : MonoBehaviour {
 		gridArray = new GameObject[gridWidth, gridHeight]; //creating the grid
 		MakeGrid(); //populating the grid
 		matchManager = GetComponent<VerticalMatchManagerScript>(); //assigning scripts to variables
-		inputManager = GetComponent<InputManagerScript>();
-		repopulateManager = GetComponent<RepopulateScript>();
-		moveTokenManager = GetComponent<MoveTokensScript>();
+		inputManager = GetComponent<CoreyInputManagerScript>();
+		repopulateManager = GetComponent<CoreyRepopulateScript>();
+		moveTokenManager = GetComponent<CoreyMoveTokensScript>();
 	}
 
 	public virtual void Update(){
