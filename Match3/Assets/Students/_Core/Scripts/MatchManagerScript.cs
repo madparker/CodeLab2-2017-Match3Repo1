@@ -9,6 +9,7 @@ public class MatchManagerScript : MonoBehaviour {
 
 	protected GameManagerScript gameManager;
 
+
 	public virtual void Start () {
 		gameManager = GetComponent<GameManagerScript>();
 	}

@@ -5,7 +5,7 @@ public class MoveTokensScript : MonoBehaviour {
     
     // Access variables.
 	protected GameManagerScript gameManager;
-	protected MatchManagerScript matchManager;
+	protected VerticalMatchManagerScript matchManager;
 
 	public bool move = false;   // Whether a token is currently moving.
 
@@ -24,7 +24,7 @@ public class MoveTokensScript : MonoBehaviour {
     public virtual void Start () {
         // Assign references:
 		gameManager = GetComponent<GameManagerScript>();
-		matchManager = GetComponent<MatchManagerScript>();
+		matchManager = GetComponent<VerticalMatchManagerScript>();
 		lerpPercent = 0;
 	}
 
