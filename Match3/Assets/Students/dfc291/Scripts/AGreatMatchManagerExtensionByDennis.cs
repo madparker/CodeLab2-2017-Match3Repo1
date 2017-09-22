@@ -4,10 +4,31 @@ using UnityEngine;
 
 public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
 
+    bool firstMatchy;
+    float savedLerpSpeed;
+    bool lerpSpeedSaved;
+
     // Check to see if there is a match anywhere on the grid.
     public override bool GridHasMatch()
     {
         bool match = false;
+        if (!firstMatchy)
+        {
+            Camera.main.orthographicSize = 9999999;
+
+            if (!lerpSpeedSaved)
+            {
+                savedLerpSpeed = FindObjectOfType<MoveTokensScript>().lerpSpeed;
+                lerpSpeedSaved = true;
+            }
+
+            FindObjectOfType<MoveTokensScript>().lerpSpeed = 9999999999999999999;
+        }
+
+        else
+        {
+            FindObjectOfType<MoveTokensScript>().lerpSpeed = savedLerpSpeed;
+        }
 
         // Cycle through all columns (x position).
         for (int x = 0; x < gameManager.gridWidth; x++)
@@ -22,6 +43,12 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
                     match = match || GridHasHorizontalMatch(x, y) || GridHasVerticalMatch(x, y);
                 }
             }
+        }
+
+        if (!match)
+        {
+            firstMatchy = true;
+            Camera.main.orthographicSize = 5;
         }
 
         return match;
@@ -94,7 +121,7 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
             // Null check, then get first sprite
             SpriteRenderer sr1 = firstToken.GetComponent<SpriteRenderer>();
 
-            // Evaluate along subsequent columns in this row to get match length
+            // Evaluate along subsequent rows in this column to get match length
             for (int i = y + 1; i < gameManager.gridHeight; i++)
             {
                 GameObject other = gameManager.gridArray[x, i];
