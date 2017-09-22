@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManagerScript : MonoBehaviour {
+public class CoreyGameManagerScript : MonoBehaviour {
 
 	public int gridWidth = 8;
 	public int gridHeight = 8;
@@ -9,10 +9,10 @@ public class GameManagerScript : MonoBehaviour {
 
 	//references to other managers
 	//these can only be accessed by code in this class, or class derived from this class
-	protected MatchManagerScript matchManager;
-	protected InputManagerScript inputManager;
-	protected RepopulateScript repopulateManager;
-	protected MoveTokensScript moveTokenManager;
+	protected VerticalMatchManagerScript matchManager;
+	protected CoreyInputManagerScript inputManager;
+	protected CoreyRepopulateScript repopulateManager;
+	protected CoreyMoveTokensScript moveTokenManager;
 
 	public GameObject grid;  
 	public  GameObject[,] gridArray; //2D array for grid
@@ -24,10 +24,10 @@ public class GameManagerScript : MonoBehaviour {
 		tokenTypes = (Object[])Resources.LoadAll("_Core/Tokens/"); //grabbing prefabs
 		gridArray = new GameObject[gridWidth, gridHeight]; //creating the grid
 		MakeGrid(); //populating the grid
-		matchManager = GetComponent<MatchManagerScript>(); //assigning scripts to variables
-		inputManager = GetComponent<InputManagerScript>();
-		repopulateManager = GetComponent<RepopulateScript>();
-		moveTokenManager = GetComponent<MoveTokensScript>();
+		matchManager = GetComponent<VerticalMatchManagerScript>(); //assigning scripts to variables
+		inputManager = GetComponent<CoreyInputManagerScript>();
+		repopulateManager = GetComponent<CoreyRepopulateScript>();
+		moveTokenManager = GetComponent<CoreyMoveTokensScript>();
 	}
 
 	public virtual void Update(){

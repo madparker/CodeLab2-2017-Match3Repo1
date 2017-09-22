@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveTokensScript : MonoBehaviour {
+public class CoreyMoveTokensScript : MonoBehaviour {
     
     // Access variables.
-	protected GameManagerScript gameManager;
-	protected MatchManagerScript matchManager;
+	protected CoreyGameManagerScript gameManager;
+	protected VerticalMatchManagerScript matchManager;
 
 	public bool move = false;   // Whether a token is currently moving.
 
@@ -23,8 +23,8 @@ public class MoveTokensScript : MonoBehaviour {
 
     public virtual void Start () {
         // Assign references:
-		gameManager = GetComponent<GameManagerScript>();
-		matchManager = GetComponent<MatchManagerScript>();
+		gameManager = GetComponent<CoreyGameManagerScript>();
+		matchManager = GetComponent<VerticalMatchManagerScript>();
 		lerpPercent = 0;
 	}
 
