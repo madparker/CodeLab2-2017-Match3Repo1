@@ -5,7 +5,6 @@ using UnityEngine;
 public class MoveTokenScript_dmf463 : MoveTokensScript {
 
     public float duration;
-    public float step;
 
     public override void Start()
     {
@@ -19,7 +18,7 @@ public class MoveTokenScript_dmf463 : MoveTokensScript {
         {
             // Increase lerp percent.
             lerpPercent += lerpSpeed;
-            //step = lerpPercent / duration;
+
             // Make sure lerp percent never exceeds 1 so that the lerp stops.
             if (lerpPercent >= duration)
             {
@@ -51,6 +50,10 @@ public class MoveTokenScript_dmf463 : MoveTokensScript {
                     for (int pos = y; pos < gameManager.gridHeight; pos++)
                     {
                         GameObject token = gameManager.gridArray[x, pos];
+                        //something about them all falling together is making it so that the movement isn't smooth
+                        //when it falls one by one, the lerping is perfect.
+                        //perhaps they're sharing a value?
+                        //why would they skip one...
                         if (token != null)
                         {
                             MoveTokenToEmptyPos(x, pos, x, pos - 1, token);
@@ -73,15 +76,9 @@ public class MoveTokenScript_dmf463 : MoveTokensScript {
         // Get the starting and ending point for the upcoming move.
         Vector3 startPos = gameManager.GetWorldPositionFromGridPosition(startGridX, startGridY);
         Vector3 endPos = gameManager.GetWorldPositionFromGridPosition(endGridX, endGridY);
-        //Debug.Log("startPos Before lerp = " + startPos);
-        //Debug.Log("endPos beforeLerp = " + endPos);
 
         // Get the new position of this token.
         Vector3 pos = Vector3.Lerp(startPos, endPos, lerpPercent);
-
-        //Debug.Log("startPos after lerp = " + startPos);
-        //Debug.Log("endPos after Lerp = " + endPos);
-        //Debug.Log("lerpPercept = " + lerpPercent);
 
         // Update the position of the token.
         token.transform.position = pos;
