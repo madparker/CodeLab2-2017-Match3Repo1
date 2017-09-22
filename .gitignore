@@ -32,3 +32,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Match3/.vscode/settings.json
+Match3/Assets/Students/sc5875.meta
+Match3/Assets/Students/sc5875/Scenes.meta
+Match3/Assets/Students/sc5875/Scripts.meta
