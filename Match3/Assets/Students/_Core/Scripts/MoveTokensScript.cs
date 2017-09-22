@@ -5,7 +5,7 @@ public class MoveTokensScript : MonoBehaviour {
     
     // Access variables.
 	protected GameManagerScript gameManager;
-	protected MatchManagerScript matchManager;
+	protected VerticalMatchManagerScript matchManager;
 
 	public bool move = false;   // Whether a token is currently moving.
 
@@ -24,7 +24,7 @@ public class MoveTokensScript : MonoBehaviour {
     public virtual void Start () {
         // Assign references:
 		gameManager = GetComponent<GameManagerScript>();
-		matchManager = GetComponent<MatchManagerScript>();
+		matchManager = GetComponent<VerticalMatchManagerScript>();
 		lerpPercent = 0;
 	}
 
@@ -115,13 +115,13 @@ public class MoveTokensScript : MonoBehaviour {
 	public virtual void MoveTokenToEmptyPos(int startGridX, int startGridY,
 	                                int endGridX, int endGridY,
 	                                GameObject token){
-	
+
         // Get the starting and ending point for the upcoming move.
 		Vector3 startPos = gameManager.GetWorldPositionFromGridPosition(startGridX, startGridY);
 		Vector3 endPos = gameManager.GetWorldPositionFromGridPosition(endGridX, endGridY);
 
         // Get the new position of this token.
-		Vector3 pos = Vector3.Lerp(startPos, endPos, lerpPercent);
+        Vector3 pos = Vector3.Lerp(startPos, endPos, lerpPercent);
 
         // Update the position of the token.
 		token.transform.position =	pos;
@@ -145,8 +145,8 @@ public class MoveTokensScript : MonoBehaviour {
 					for(int pos = y; pos < gameManager.gridHeight; pos++){
 						GameObject token = gameManager.gridArray[x, pos];
 						if(token != null){
-							MoveTokenToEmptyPos(x, pos, x, pos - 1, token);
-							movedToken = true;
+                            MoveTokenToEmptyPos(x, pos, x, pos - 1, token);
+                            movedToken = true;
 						}
 					}
 				}
