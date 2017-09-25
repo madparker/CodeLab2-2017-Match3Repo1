@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveTokenScript_dmf463 : MoveTokensScript {
-
     public float duration;
 
     public override void Start()
@@ -50,16 +49,14 @@ public class MoveTokenScript_dmf463 : MoveTokensScript {
                     for (int pos = y; pos < gameManager.gridHeight; pos++)
                     {
                         GameObject token = gameManager.gridArray[x, pos];
-                        //something about them all falling together is making it so that the movement isn't smooth
-                        //when it falls one by one, the lerping is perfect.
-                        //perhaps they're sharing a value?
-                        //why would they skip one...
                         if (token != null)
                         {
                             MoveTokenToEmptyPos(x, pos, x, pos - 1, token);
                             movedToken = true;
                         }
                     }
+                    //if a null is found below a token, break so it doesn't make the token move more than one space at a time
+                    break;
                 }
             }
         }
