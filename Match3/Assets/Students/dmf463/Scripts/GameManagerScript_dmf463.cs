@@ -12,7 +12,20 @@ public class GameManagerScript_dmf463 : GameManagerScript {
 
     public override void Update()
     {
-        base.Update();
+        if (!GridHasEmpty())
+        { //if grid is fully populated
+            if (matchManager.GridHasMatch())
+            {
+                //remove the matches
+                matchManager.RemoveMatches();
+            }
+            else inputManager.SelectToken(); //allow token to be selected
+        }
+        else
+        { //if grid not fully populated
+            if (!moveTokenManager.move) moveTokenManager.SetupTokenMove(); //set it true so they can fill empty space
+            if (!moveTokenManager.MoveTokensToFillEmptySpaces()) repopulateManager.AddNewTokensToRepopulateGrid(); //and there are still free spaces, allow it to populate
+        }
     }
 
     public override bool GridHasEmpty()
