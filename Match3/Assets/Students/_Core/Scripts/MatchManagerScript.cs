@@ -54,7 +54,7 @@ public class MatchManagerScript : MonoBehaviour {
 	}
 
 
-	public int GetHorizontalMatchLength(int x, int y){
+	public virtual int GetHorizontalMatchLength(int x, int y){
 		int matchLength = 1;
 		
 		GameObject first = gameManager.gridArray[x, y];
