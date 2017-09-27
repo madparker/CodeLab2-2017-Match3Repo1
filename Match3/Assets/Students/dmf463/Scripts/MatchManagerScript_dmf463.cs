@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class MatchManagerScript_dmf463 : MatchManagerScript {
 
+    public void Awake()
+    {
+        gameManager = GetComponent<GameManagerScript_dmf463>();
+    }
+
     public override bool GridHasMatch()
     {
         bool match = false;
