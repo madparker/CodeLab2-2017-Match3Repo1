@@ -23,7 +23,7 @@ public class Pao_MatchManager : MatchManagerScript {
                     //once we've found a match, match will always return true
                     hasMatch = hasMatch || GridHasHorizontalMatch(x, y);
                 }
-               if (y < gameManager.gridHeight - 2) {
+               	if (y < gameManager.gridHeight - 2) {
                     hasMatch = hasMatch || GridHasVerticalMatch(x, y);
                 }
 
