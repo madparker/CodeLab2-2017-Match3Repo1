@@ -176,7 +176,16 @@ public class Pao_MatchManager : MatchManagerScript {
  				// 		}
 				// 	}
 				// } 
-			RemoveMultiMatches();	
+			// RemoveMultiMatches();
+			for (int i = 0; i<matches.Count; i++){
+				Destroy(matches[i]);
+				numRemoved++;
+ 			}
+			for(int j = 0; j<gridPositions.Count; j++){
+				gridPositions[j] = null;
+ 			}
+			matches.Clear();
+			gridPositions.Clear();		
  			}
 		}
 		return numRemoved;
