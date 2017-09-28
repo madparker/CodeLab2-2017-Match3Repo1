@@ -90,6 +90,7 @@ public class Pao_MatchManager : MatchManagerScript {
 	}
 
 	public List<GameObject> matches = new List<GameObject>(); 
+	public List<GameObject> gridPositions = new List<GameObject>();
 	public override int RemoveMatches(){
 		int numRemoved = 0;
 
@@ -101,49 +102,83 @@ public class Pao_MatchManager : MatchManagerScript {
 
                 //stop at column(gridWidth - 2) because this is minimum column
                 //to check for 3-sprite match
-				if (y < gameManager.gridHeight - 2){
-					 //Call GetHorizontalMatchLength to get the length of the match
+				if(x < gameManager.gridWidth - 2 || y < gameManager.gridHeight-2){
+
 					int verticalMatchLength = GetVerticalMatchLength(x, y);
+ 					int horizonMatchLength = GetHorizontalMatchLength(x, y);
 
                     //Match must be 3 or more...
-					if(verticalMatchLength > 2){
-                        
-                        //...to go through and delete each sprite in this match
-						for(int i = y; i < y + verticalMatchLength; i++){
-							GameObject token = gameManager.gridArray[x, i]; 
-							// Destroy(token);
-							matches.Add(token);
-
-							gameManager.gridArray[x, i] = null;
-                            //record number of items removed
-							// numRemoved++;
- 						}
-					}	
-				}
-				if(x < gameManager.gridWidth - 2){
-
-                    //Call GetHorizontalMatchLength to get the length of the match
-					int horizonMatchLength = GetHorizontalMatchLength(x, y);
-
-                    //Match must be 3 or more...
-					if(horizonMatchLength > 2){
+					if(horizonMatchLength > 2 || verticalMatchLength > 2){
                         
                         //...to go through and delete each sprite in this match
 						for(int i = x; i < x + horizonMatchLength; i++){
-							GameObject token = gameManager.gridArray[i, y]; 
+							GameObject tokenX = gameManager.gridArray[i, y]; 
 							// Destroy(token);
-							matches.Add(token);
+							matches.Add(tokenX);
+							gridPositions.Add(gameManager.gridArray[i, y]);
 
-							gameManager.gridArray[i, y] = null;
+							// gameManager.gridArray[i, y] = null;
+
+ 							for(int j = y; j < y + verticalMatchLength; j++){
+								GameObject tokenY = gameManager.gridArray[x,j]; 
+								// Destroy(token);
+								if(!matches.Contains(tokenY)){
+									matches.Add(tokenY);
+								}
+								if(!gridPositions.Contains(gameManager.gridArray[x, j])){
+									gridPositions.Add(gameManager.gridArray[x, j]);						
+								}
+								// gameManager.gridArray[x, j] = null;
+								//record number of items removed
+								// numRemoved++;
+ 							}
                             //record number of items removed
 							// numRemoved++;
  						}
 					}
 				} 
-				RemoveMultiMatches();
-			}
+				// if (y < gameManager.gridHeight - 2){
+				// 	 //Call GetHorizontalMatchLength to get the length of the match
+				// 	int verticalMatchLength = GetVerticalMatchLength(x, y);
+
+                //     //Match must be 3 or more...
+				// 	if(verticalMatchLength > 2){
+                        
+                //         //...to go through and delete each sprite in this match
+				// 		for(int i = y; i < y + verticalMatchLength; i++){
+				// 			GameObject token = gameManager.gridArray[x, i]; 
+				// 			// Destroy(token);
+				// 			if(!matches.Contains(token)){
+				// 				matches.Add(token);
+				// 			}
+                //             //record number of items removed
+				// 			// numRemoved++;
+ 				// 		}
+				// 	}	
+				// }
+				// if(x < gameManager.gridWidth - 2){
+
+                //     //Call GetHorizontalMatchLength to get the length of the match
+				// 	int horizonMatchLength = GetHorizontalMatchLength(x, y);
+
+                //     //Match must be 3 or more...
+				// 	if(horizonMatchLength > 2){
+                        
+                //         //...to go through and delete each sprite in this match
+				// 		for(int i = x; i < x + horizonMatchLength; i++){
+				// 			GameObject token = gameManager.gridArray[i, y]; 
+				// 			// Destroy(token);
+				// 			matches.Add(token);
+				
+				// 			gameManager.gridArray[i, y] = null;
+                //             //record number of items removed
+				// 			// numRemoved++;
+ 				// 		}
+				// 	}
+				// } 
+			RemoveMultiMatches();	
+ 			}
 		}
-		
 		return numRemoved;
 	}
 
@@ -151,6 +186,11 @@ public class Pao_MatchManager : MatchManagerScript {
 		for (int i = 0; i<matches.Count; i++){
 			Destroy(matches[i]);
  		}
+		for(int j = 0; j<gridPositions.Count; j++){
+			gridPositions[j] = null;
+		}
+		matches.Clear();
+		gridPositions.Clear();		
 	}
 
  }
