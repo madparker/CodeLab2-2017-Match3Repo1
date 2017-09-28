@@ -48,7 +48,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	//creates grid and populates it with random tokens
-	void MakeGrid() {
+	protected void MakeGrid() {
 		grid = new GameObject("TokenGrid");
 		for(int x = 0; x < gridWidth; x++){
 			for(int y = 0; y < gridHeight; y++){
@@ -83,7 +83,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	//setting world position
-	public Vector2 GetWorldPositionFromGridPosition(int x, int y){
+	public virtual Vector2 GetWorldPositionFromGridPosition(int x, int y){
 		return new Vector2(
 			(x - gridWidth/2) * tokenSize,
 			(y - gridHeight/2) * tokenSize);
