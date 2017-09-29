@@ -24,7 +24,8 @@ public class Pao_InputManager : InputManagerScript {
 				if(selected == null){
                     //select the thing the mouse is pointed at
 					selected = collider.gameObject;
-				} else {
+				} 
+				else {
                     //if we already have a selection, then get the grid positions of the two objects
                     //(selected and collider)
 
@@ -44,8 +45,5 @@ public class Pao_InputManager : InputManagerScript {
 				}
 			}
 		}
-	}
-	void Update () {
-		
 	}
 }
