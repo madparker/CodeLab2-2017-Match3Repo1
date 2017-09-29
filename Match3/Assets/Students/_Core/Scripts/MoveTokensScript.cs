@@ -12,7 +12,7 @@ public class MoveTokensScript : MonoBehaviour {
 	public float lerpPercent;
 	public float lerpSpeed;
 
-	bool userSwap;
+	protected bool userSwap;
 
 	protected GameObject exchangeToken1;
 	GameObject exchangeToken2;
