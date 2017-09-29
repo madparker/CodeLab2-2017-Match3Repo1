@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VerticalMatchManagerScript : CoreyMatchManagerScript {
+public class VerticalMatchManagerScript : MatchManagerScript {
 
 	// Use this for initialization
 
