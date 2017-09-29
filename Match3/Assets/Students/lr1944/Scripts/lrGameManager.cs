@@ -9,7 +9,7 @@ public class lrGameManager : GameManagerScript {
 
 
 	public override void Start () {
-		tokenTypes = (Object[])Resources.LoadAll("_Core/Tokens/"); //grabbing prefabs
+		tokenTypes = (Object[])Resources.LoadAll("lr1944/Tokens/"); //grabbing prefabs
 		gridArray = new GameObject[gridWidth, gridHeight]; //creating the grid
 
 		matchManager = GetComponent<MatchManagerScript>(); //assigning scripts to variables
@@ -51,7 +51,7 @@ public class lrGameManager : GameManagerScript {
 
 		token.transform.position = position + new Vector3 (0, 0, -10);
 
-		RotateToken (token, x);
+		RotateToken (token, x, y);
 
 		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
 			rnd = (rnd + 1) % tokenTypes.Length;
@@ -75,13 +75,14 @@ public class lrGameManager : GameManagerScript {
 	//setting world position
 	public virtual Vector2 GetWorldPositionFromGridPosition(int x, int y){
 		return new Vector2(
-			(x - gridWidth/2f) * tokenSize,
+			0,
 			(y - gridHeight/2f) * tokenSize
 		);
 	}
 
-	void RotateToken (GameObject token, int x) {
-		token.transform.RotateAround (new Vector3 (0,0,0), Vector3.up, (360f/gridWidth) * x);
+	void RotateToken (GameObject token, int x, int y) {
+		token.transform.RotateAround (new Vector3 (0,y,0), Vector3.up, (360f/gridWidth) * x);
+		Debug.Log (x + " " + ((360f / gridWidth) * x));
 	}
 
 
