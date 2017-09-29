@@ -1,8 +1,29 @@
 fileFormatVersion: 2
-guid: e2e0bdda52027284a8962451763103e6
+<<<<<<< HEAD
+guid: 228e851814ad9a94faf574acd6e3da38
 folderAsset: yes
-timeCreated: 1506100530
+timeCreated: 1506102649
 licenseType: Free
+=======
+<<<<<<< HEAD
+guid: 44e8a7d7c2b1547c78c709b3640bf167
+folderAsset: yes
+timeCreated: 1506103224
+licenseType: Free
+=======
+<<<<<<< HEAD
+guid: fbd8fc6e6b0e5ed4390dbc42f3c9bc51
+folderAsset: yes
+timeCreated: 1506103256
+licenseType: Free
+=======
+guid: 48d9d064f0ccc45a8a2fd6caa6a48970
+folderAsset: yes
+timeCreated: 1506100541
+licenseType: Pro
+>>>>>>> f70c0bf164c2efc165b0097c2fb9b589c37ad2ea
+>>>>>>> 9c5fb71fb212baf1503831b5e43c21dc61fa7366
+>>>>>>> 6e0b54d9a13f3432e7aca98772806cdf12b80115
 DefaultImporter:
   userData: 
   assetBundleName: 

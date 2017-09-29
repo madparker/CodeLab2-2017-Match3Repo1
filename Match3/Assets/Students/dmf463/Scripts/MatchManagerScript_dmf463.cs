@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class MatchManagerScript_dmf463 : MatchManagerScript {
 
+    public void Awake()
+    {
+        gameManager = GetComponent<GameManagerScript_dmf463>();
+    }
+
     public override bool GridHasMatch()
     {
         bool match = false;
-        if (!base.GridHasMatch())
+        //cycle through columns(x position)
+        for (int x = 0; x < gameManager.gridWidth; x++)
         {
-            //cycle through columns(x position)
-            for (int x = 0; x < gameManager.gridWidth; x++)
+            //cycle through vertical elements in row
+            for (int y = 0; y < gameManager.gridWidth; y++)
             {
-                //cycle through vertical elements in row
-                for (int y = 0; y < gameManager.gridWidth; y++)
+                //don't need to evaluate last two rows, because 
+                //GridHasHorizontalMatch method is checking last two
+                if(x < gameManager.gridWidth - 2)
                 {
-                    //don't need to evaluate last two rows, because 
-                    //GridHasHorizontalMatch method is checking last two
-                    if (y < gameManager.gridHeight - 2)
-                    {
-                        //once we've found a match, match will always return true
-                        match = match || GridHasVerticalMatch(x, y);
-                    }
+                    match = match || GridHasHorizontalMatch(x, y);
+                }
+                if (y < gameManager.gridHeight - 2)
+                {
+                    //once we've found a match, match will always return true
+                    match = match || GridHasVerticalMatch(x, y);
                 }
             }
         }
-        else return base.GridHasMatch();
         //Debug.Log("match = "  + match);
         return match;
     }
@@ -33,7 +38,8 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
     public override int RemoveMatches()
     {
         int numRemoved = 0;
-
+        List<GameObject> tokensToDestroy = new List<GameObject>();
+        List<Vector2> tokenPos = new List<Vector2>();
         //cycle through row first... 
         for (int x = 0; x < gameManager.gridWidth; x++)
         {
@@ -43,6 +49,28 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
 
                 //stop at row(gridHeight - 2) because this is minimum column
                 //to check for 3-sprite match
+                if (x < gameManager.gridWidth - 2)
+                {
+
+                    //Call GetHorizontalMatchLength to get the length of the match
+                    int horizonMatchLength = GetHorizontalMatchLength(x, y);
+
+                    //Match must be 3 or more...
+                    if (horizonMatchLength > 2)
+                    {
+
+                        //...to go through and delete each sprite in this match
+                        for (int i = x; i < x + horizonMatchLength; i++)
+                        {
+                            GameObject token = gameManager.gridArray[i, y];
+                            tokensToDestroy.Add(token);
+                            tokenPos.Add(new Vector2 (i, y));
+                            //gameManager.gridArray[i, y] = null;
+                            //record number of items removed
+                            numRemoved++;
+                        }
+                    }
+                }
                 if (y < gameManager.gridHeight - 2)
                 {
 
@@ -57,9 +85,9 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
                         for (int i = y; i < y + verticalMatchLength; i++)
                         {
                             GameObject token = gameManager.gridArray[x, i];
-                            Destroy(token);
-
-                            gameManager.gridArray[x, i] = null;
+                            tokensToDestroy.Add(token);
+                            tokenPos.Add(new Vector2(x, i));
+                            //gameManager.gridArray[x, i] = null;
                             //record number of items removed
                             numRemoved++;
                         }
@@ -67,8 +95,15 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
                 }
             }
         }
-        if(numRemoved != 0) return numRemoved;
-        else return base.RemoveMatches();
+        foreach (GameObject token in tokensToDestroy)
+        {
+            Destroy(token);
+        }
+        for (int i = 0; i < tokenPos.Count; i++)
+        {
+            gameManager.gridArray[(int)tokenPos[i].x, (int)tokenPos[i].y] = null;
+        }
+        return numRemoved;
     }
 
     //check

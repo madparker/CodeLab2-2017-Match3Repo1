@@ -22,6 +22,7 @@ public class AGreatInputManagerScriptExtensionByDennis : InputManagerScript {
                     //select the thing the mouse is pointed at
                     selected = collider.gameObject;
                 }
+
                 else
                 {
                     //if we already have a selection, then get the grid positions of the two objects
