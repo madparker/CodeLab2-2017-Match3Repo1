@@ -39,7 +39,7 @@ public class lrGameManager : GameManagerScript {
 
 	//adds random token types to specific positions in the grid
 	public void AddTokenToPosInGridNew(int x, int y, GameObject parent){
-		Vector3 position = GetWorldPositionFromGridPositionNew(x, y); 
+		Vector3 position = GetWorldPositionFromGridPosition(x, y); 
 
 		int rnd = Random.Range (0, tokenTypes.Length);
 			
@@ -48,6 +48,8 @@ public class lrGameManager : GameManagerScript {
 			Instantiate(tokenTypes[rnd], position, Quaternion.identity) as GameObject;
 		token.transform.parent = parent.transform;
 		gridArray[x, y] = token;
+
+		token.transform.position = position + new Vector3 (0, 0, -10);
 
 		RotateToken (token, x);
 
@@ -62,19 +64,24 @@ public class lrGameManager : GameManagerScript {
 			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
 		}
 
+		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
+			rnd = (rnd + 1) % tokenTypes.Length;
+			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
+
+		}
+
 	}
 
 	//setting world position
-	public Vector3 GetWorldPositionFromGridPositionNew(int x, int y){
-		return new Vector3(
-			(x - gridWidth/2) * tokenSize,
-			(y - gridHeight/2) * tokenSize,
-			-10
+	public virtual Vector2 GetWorldPositionFromGridPosition(int x, int y){
+		return new Vector2(
+			(x - gridWidth/2f) * tokenSize,
+			(y - gridHeight/2f) * tokenSize
 		);
 	}
 
 	void RotateToken (GameObject token, int x) {
-		token.transform.RotateAround (new Vector3 (0,0,0), Vector3.up, (360/gridWidth) * x);
+		token.transform.RotateAround (new Vector3 (0,0,0), Vector3.up, (360f/gridWidth) * x);
 	}
 
 
