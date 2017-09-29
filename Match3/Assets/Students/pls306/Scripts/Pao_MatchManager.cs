@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Pao_MatchManager : MatchManagerScript {
 
+	private const float COROUTINE_DELAY = 2f; 
+
 	public override void Start(){
 		base.Start();
 	}
@@ -89,8 +91,8 @@ public class Pao_MatchManager : MatchManagerScript {
 		return matchLength;
 	}
 
-	public List<GameObject> matches = new List<GameObject>(); 
-	public List<GameObject> gridPositions = new List<GameObject>();
+	List<GameObject> matches = new List<GameObject>(); 
+	List<GameObject> gridPositions = new List<GameObject>();
 	public override int RemoveMatches(){
 		int numRemoved = 0;
 
@@ -137,51 +139,20 @@ public class Pao_MatchManager : MatchManagerScript {
  						}
 					}
 				} 
-				// if (y < gameManager.gridHeight - 2){
-				// 	 //Call GetHorizontalMatchLength to get the length of the match
-				// 	int verticalMatchLength = GetVerticalMatchLength(x, y);
-
-                //     //Match must be 3 or more...
-				// 	if(verticalMatchLength > 2){
-                        
-                //         //...to go through and delete each sprite in this match
-				// 		for(int i = y; i < y + verticalMatchLength; i++){
-				// 			GameObject token = gameManager.gridArray[x, i]; 
-				// 			// Destroy(token);
-				// 			if(!matches.Contains(token)){
-				// 				matches.Add(token);
-				// 			}
-                //             //record number of items removed
-				// 			// numRemoved++;
- 				// 		}
-				// 	}	
-				// }
-				// if(x < gameManager.gridWidth - 2){
-
-                //     //Call GetHorizontalMatchLength to get the length of the match
-				// 	int horizonMatchLength = GetHorizontalMatchLength(x, y);
-
-                //     //Match must be 3 or more...
-				// 	if(horizonMatchLength > 2){
-                        
-                //         //...to go through and delete each sprite in this match
-				// 		for(int i = x; i < x + horizonMatchLength; i++){
-				// 			GameObject token = gameManager.gridArray[i, y]; 
-				// 			// Destroy(token);
-				// 			matches.Add(token);
-				
-				// 			gameManager.gridArray[i, y] = null;
-                //             //record number of items removed
-				// 			// numRemoved++;
- 				// 		}
-				// 	}
-				// } 
-			// RemoveMultiMatches();
+			
 			for (int i = 0; i<matches.Count; i++){
 				Destroy(matches[i]);
+				// matches[i].AddComponent<BoxCollider2D>();
 				numRemoved++;
  			}
 			for(int j = 0; j<gridPositions.Count; j++){
+				GameObject block = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				// Destroy(block.GetComponent<BoxCollider>());
+				// StartCoroutine(AddBoxCollider2D(COROUTINE_DELAY, block));
+				// block.AddComponent<Rigidbody>();
+ 				block.transform.position = gridPositions[j].transform.position;
+				// Destroy(block, 5f);
+ 				// block.transform.localScale = new Vector3(0.95f, 0.95f,0.95f);
 				gridPositions[j] = null;
  			}
 			matches.Clear();
@@ -192,7 +163,7 @@ public class Pao_MatchManager : MatchManagerScript {
 	}
 
  	private void RemoveMultiMatches(){
-		for (int i = 0; i<matches.Count; i++){
+		for (int i = 0; i<matches.Count; i++){			
 			Destroy(matches[i]);
  		}
 		for(int j = 0; j<gridPositions.Count; j++){
@@ -200,6 +171,11 @@ public class Pao_MatchManager : MatchManagerScript {
 		}
 		matches.Clear();
 		gridPositions.Clear();		
+	}
+
+	IEnumerator AddBoxCollider2D(float delay,GameObject block_){
+		yield return new WaitForSeconds(delay);
+		block_.AddComponent<BoxCollider2D>();
 	}
 
  }
