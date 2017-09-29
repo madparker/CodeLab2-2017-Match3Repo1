@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class lrInputManager : InputManagerScript {
 
+
+
 	public override void SelectToken(){
 		if(Input.GetMouseButtonDown(0)){
 

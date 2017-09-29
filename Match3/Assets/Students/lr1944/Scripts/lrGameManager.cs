@@ -49,9 +49,9 @@ public class lrGameManager : GameManagerScript {
 		token.transform.parent = parent.transform;
 		gridArray[x, y] = token;
 
-		token.transform.position = position + new Vector3 (0, 0, -10);
 
-		RotateToken (token, x, y);
+
+		RotateToken (token);
 
 		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
 			rnd = (rnd + 1) % tokenTypes.Length;
@@ -73,17 +73,21 @@ public class lrGameManager : GameManagerScript {
 	}
 
 	//setting world position
-	public virtual Vector2 GetWorldPositionFromGridPosition(int x, int y){
+	public override Vector2 GetWorldPositionFromGridPosition(int x, int y){
 		return new Vector2(
-			0,
+			(x - gridWidth/2f) * tokenSize,
 			(y - gridHeight/2f) * tokenSize
 		);
 	}
 
-	void RotateToken (GameObject token, int x, int y) {
-		token.transform.RotateAround (new Vector3 (0,y,0), Vector3.up, (360f/gridWidth) * x);
-		Debug.Log (x + " " + ((360f / gridWidth) * x));
+	public void RotateToken (GameObject token) {
+		float xPos = token.transform.position.x;
+		token.transform.position = Vector3.up*token.transform.position.y + new Vector3 (0, 0, -10);
+		token.transform.RotateAround (new Vector3 (0,token.transform.position.y,0), Vector3.up, (360f/gridWidth) * xPos);
+//		Debug.Log (x + " " + ((360f / gridWidth) * x));
 	}
+
+
 
 
 }
