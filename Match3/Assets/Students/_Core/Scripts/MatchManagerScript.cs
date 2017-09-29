@@ -35,7 +35,7 @@ public class MatchManagerScript : MonoBehaviour {
 	}
 
     //checking for horizontal matches in the entire grid
-	public virtual bool GridHasHorizontalMatch(int x, int y){
+	public bool GridHasHorizontalMatch(int x, int y){
         //reference to 3 game objects along y row, starting from x
 		GameObject token1 = gameManager.gridArray[x + 0, y];
 		GameObject token2 = gameManager.gridArray[x + 1, y];
@@ -54,7 +54,7 @@ public class MatchManagerScript : MonoBehaviour {
 	}
 
 
-	public virtual int GetHorizontalMatchLength(int x, int y){
+	public int GetHorizontalMatchLength(int x, int y){
 		int matchLength = 1;
 		
 		GameObject first = gameManager.gridArray[x, y];

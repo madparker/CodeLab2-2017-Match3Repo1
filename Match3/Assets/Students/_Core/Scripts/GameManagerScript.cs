@@ -48,7 +48,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	//creates grid and populates it with random tokens
-	protected void MakeGrid() {
+	void MakeGrid() {
 		grid = new GameObject("TokenGrid");
 		for(int x = 0; x < gridWidth; x++){
 			for(int y = 0; y < gridHeight; y++){

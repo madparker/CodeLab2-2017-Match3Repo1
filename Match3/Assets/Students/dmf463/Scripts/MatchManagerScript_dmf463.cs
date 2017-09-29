@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MatchManagerScript_dmf463 : MatchManagerScript {
 
+    public List<GameObject> pairedTokens = new List<GameObject>();
+
     public void Awake()
     {
         gameManager = GetComponent<GameManagerScript_dmf463>();
@@ -59,7 +61,7 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
                     if (horizonMatchLength > 2)
                     {
 
-                        //...to go through and delete each sprite in this match
+                        //...to go through and add each token to a list to be destroyed
                         for (int i = x; i < x + horizonMatchLength; i++)
                         {
                             GameObject token = gameManager.gridArray[i, y];
@@ -81,7 +83,7 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
                     if (verticalMatchLength > 2)
                     {
 
-                        //...to go through and delete each sprite in this match
+                        //...to go through and add each token to a list to be destroyed
                         for (int i = y; i < y + verticalMatchLength; i++)
                         {
                             GameObject token = gameManager.gridArray[x, i];
@@ -121,7 +123,10 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
             SpriteRenderer sr2 = token2.GetComponent<SpriteRenderer>();
             SpriteRenderer sr3 = token3.GetComponent<SpriteRenderer>();
 
-            return (sr1.sprite == sr2.sprite && sr2.sprite == sr3.sprite);
+            //if none of the three match, return true
+            //else return false
+            if (sr1.sprite != sr2.sprite && sr2.sprite != sr3.sprite) return true;
+            else return false;
         }
         else
         {
@@ -129,25 +134,71 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
         }
     }
 
-    public int GetVerticalMatchLength(int x, int y)
+    //checking for horizontal matches in the entire grid
+    public override bool GridHasHorizontalMatch(int x, int y)
+    {
+        //reference to 3 game objects along y row, starting from x
+        GameObject token1 = gameManager.gridArray[x + 0, y];
+        GameObject token2 = gameManager.gridArray[x + 1, y];
+        GameObject token3 = gameManager.gridArray[x + 2, y];
+
+        if (token1 != null && token2 != null) //&& token3 != null)
+        {
+            //after null check, evaluate match among the three sprites
+            SpriteRenderer sr1 = token1.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr2 = token2.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr3 = token3.GetComponent<SpriteRenderer>();
+
+            //if none of the three match, return true
+            //else return false
+            if (sr1.sprite != sr2.sprite && sr2.sprite != sr3.sprite) return true;
+            else return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public override int GetHorizontalMatchLength(int x, int y)
     {
         int matchLength = 1;
-
+        //this is the sprite immediately preceding the first sprite in the match
+        GameObject beforeFirst = null;
         GameObject first = gameManager.gridArray[x, y];
+        if(x != 0)
+        {
+            beforeFirst = gameManager.gridArray[x - 1, y];
+        }
+
+        //if we're not at the border
+        //and the sprite before the match matches the sprite
+        //then don't delete the sprite that matches
+        //matches don't get deleted
+        if(beforeFirst != null)
+        {
+            Debug.Log("Changing first");
+            if (first.GetComponent<SpriteRenderer>().sprite == beforeFirst.GetComponent<SpriteRenderer>().sprite)
+            {
+                first = gameManager.gridArray[x + 1, y];
+            }
+        }
 
         if (first != null)
         {
             //null check, then get first sprite
             SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
 
-            //evaluate along subsequent rows in this column to get match length
-            for (int i = y + 1; i < gameManager.gridHeight; i++)
+            //evaluate along subsequent columns in this row to get match length
+            for (int i = x + 1; i < gameManager.gridWidth; i++)
             {
-                GameObject other = gameManager.gridArray[x, i];
+                GameObject other = gameManager.gridArray[i, y];
+
                 if (other != null)
                 {
                     SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
-                    if (sr1.sprite == sr2.sprite)
+
+                    if (sr1.sprite != sr2.sprite)
                     {
                         matchLength++;
                     }
@@ -165,6 +216,62 @@ public class MatchManagerScript_dmf463 : MatchManagerScript {
             }
         }
         //... then return the length of the match
+        //Debug.Log(matchLength);
+        return matchLength;
+    }
+
+    public int GetVerticalMatchLength(int x, int y)
+    {
+        int matchLength = 1;
+        GameObject beforeFirst = null;
+
+        GameObject first = gameManager.gridArray[x, y];
+        if(y != 0)
+        {
+            beforeFirst = gameManager.gridArray[x, y - 1];
+        }
+
+        if(beforeFirst != null)
+        {
+            Debug.Log("Changing first");
+            if (first.GetComponent<SpriteRenderer>().sprite == beforeFirst.GetComponent<SpriteRenderer>().sprite)
+            {
+                first = gameManager.gridArray[x, y + 1];
+            }
+        }
+
+        if (first != null)
+        {
+            //null check, then get first sprite
+            SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
+
+            //evaluate along subsequent rows in this column to get match length
+            for (int i = y + 1; i < gameManager.gridHeight; i++)
+            {
+                GameObject other = gameManager.gridArray[x, i];
+                if (other != null)
+                {
+                    SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
+                    //if one sprite doesn't match the next, then it's a match.
+                    if (sr1.sprite != sr2.sprite)
+                    {
+                        matchLength++;
+                    }
+                    else
+                    {
+                        //break out of loop if sprites inequal...
+                        break;
+                    }
+                }
+                else
+                {
+                    //break immediately if null...
+                    break;
+                }
+            }
+        }
+        //... then return the length of the match
+        //Debug.Log(matchLength);
         return matchLength;
     }
 
