@@ -100,9 +100,10 @@ public class Chao_MoveTokensScript : MonoBehaviour {
 			gameManager.gridArray[(int)exchangeGridPos2.x, (int)exchangeGridPos2.y] = exchangeToken1;
 			gameManager.gridArray[(int)exchangeGridPos1.x, (int)exchangeGridPos1.y] = exchangeToken2;
 
-			Step--;
-			StepText.gameObject.GetComponent<TextMesh> ().text = "Step: " + Step;
-
+			if (matchManager.GridHasMatch()) {
+				Step--;
+				StepText.gameObject.GetComponent<TextMesh> ().text = "Step: " + Step;
+			}
 
             // If this exchange has not created a match, move the tokens back.
 
@@ -112,9 +113,12 @@ public class Chao_MoveTokensScript : MonoBehaviour {
 
             // If this exchange has created a match, reset all variables and set movement to false.
 			} else {
+				
 				exchangeToken1 = null;
 				exchangeToken2 = null;
 				move = false;
+
+
 			}
 		}
 	}
