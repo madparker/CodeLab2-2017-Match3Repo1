@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VerticalMatchManagerScript : MatchManagerScript {
 
-	// Use this for initialization
+    // Use this for initialization
 
     public override void Start() {
         base.Start();
@@ -35,69 +35,78 @@ public class VerticalMatchManagerScript : MatchManagerScript {
             return vertMatch;
         }
         else return horizMatch;
-	}
+    }
 
-	//checking for vertical matches
-	public bool GridHasVerticalMatch(int x, int y) {
-		//reference to 3 game objects along y row, starting from y
+    //checking for vertical matches
+    public bool GridHasVerticalMatch(int x, int y) {
+        //reference to 3 game objects along y row, starting from y
         GameObject token1 = gameManager.gridArray[x, y + 0];
         GameObject token2 = gameManager.gridArray[x, y + 1];
         GameObject token3 = gameManager.gridArray[x, y + 2];
 
-		if (token1 != null && token2 != null && token3 != null) {
-			//after null check, evaluate match among the three sprites
-			SpriteRenderer sr1 = token1.GetComponent<SpriteRenderer>();
-			SpriteRenderer sr2 = token2.GetComponent<SpriteRenderer>();
-			SpriteRenderer sr3 = token3.GetComponent<SpriteRenderer>();
+        if (token1 != null && token2 != null && token3 != null) {
+            //after null check, evaluate match among the three sprites
+            SpriteRenderer sr1 = token1.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr2 = token2.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr3 = token3.GetComponent<SpriteRenderer>();
 
-			return (sr1.sprite == sr2.sprite && sr2.sprite == sr3.sprite);
-		}
-		else {
-			return false;
-		}
-	}
+            return (sr1.sprite == sr2.sprite && sr2.sprite == sr3.sprite);
+        }
+        else {
+            return false;
+        }
+    }
 
 
-	public int GetVerticalMatchLength(int x, int y) {
-		int matchLength = 1;
+    public int GetVerticalMatchLength(int x, int y) {
+        int matchLength = 1;
 
-		GameObject first = gameManager.gridArray[x, y];
+        GameObject first = gameManager.gridArray[x, y];
 
-		if (first != null) {
-			//null check, then get first sprite
-			SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
+        if (first != null) {
+            //null check, then get first sprite
+            SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
 
-			//evaluate along subsequent columns in this column to get match length
+            //evaluate along subsequent columns in this column to get match length
             for (int i = y + 1; i < gameManager.gridHeight; i++) {
                 GameObject other = gameManager.gridArray[x, i];
 
-				if (other != null) {
-					SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
+                if (other != null) {
+                    SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
 
-					if (sr1.sprite == sr2.sprite) {
-						matchLength++;
-					}
-					else {
-						//break out of loop if sprites inequal...
-						break;
-					}
-				}
-				else {
-					//break immediately if null...
-					break;
-				}
-			}
-		}
-		//... then return the length of the match
-		return matchLength;
-	}
+                    if (sr1.sprite == sr2.sprite) {
+                        matchLength++;
+                    }
+                    else {
+                        //break out of loop if sprites inequal...
+                        break;
+                    }
+                }
+                else {
+                    //break immediately if null...
+                    break;
+                }
+            }
+        }
+        //... then return the length of the match
+        return matchLength;
+    }
 
     public override int RemoveMatches() {
-        //perform base function first
-        int horizRemoved = base.RemoveMatches();
+        //revising base function
 
-        if (horizRemoved <= 0) {
-            int vertRemoved = 0;
+        List<GameObject> horizRemoved = RemoveHorizontalMatches();
+        List<GameObject> vertRemoved = new List<GameObject>();
+
+
+
+
+        if (horizRemoved.Count <= 0) {
+            //int vertRemoved = 0;
+			
+			
+
+			
 
             //cycle through row first... 
             for (int y = 0; y < gameManager.gridHeight; y++) {
@@ -117,11 +126,14 @@ public class VerticalMatchManagerScript : MatchManagerScript {
                             //...to go through and delete each sprite in this match
                             for (int i = y; i < y + verticalMatchLength; i++) {
                                 GameObject token = gameManager.gridArray[x, i];
-                                Destroy(token);
+
+                                //For week 3 - add physics to these instead
+
+                                vertRemoved.Add(token);
 
                                 gameManager.gridArray[x, i] = null;
                                 //record number of items removed
-                                vertRemoved++;
+                                //vertRemoved++;
                             }
                         }
                     }
@@ -129,8 +141,60 @@ public class VerticalMatchManagerScript : MatchManagerScript {
             }
 
 
-            return vertRemoved;
+           
         }
-        else return horizRemoved;
-	}
+
+        if (vertRemoved.Count > 0) {
+			GameObject removeParent = new GameObject();
+			removeParent.AddComponent<PhysicsMatchRemoval>();
+            removeParent.GetComponent<PhysicsMatchRemoval>().matchObjects = vertRemoved;
+            return vertRemoved.Count;
+        } else if (horizRemoved.Count > 0) {
+			GameObject removeParent = new GameObject();
+			removeParent.AddComponent<PhysicsMatchRemoval>();
+			removeParent.GetComponent<PhysicsMatchRemoval>().matchObjects = horizRemoved;
+            return horizRemoved.Count;
+        }
+        else return horizRemoved.Count;
+    }
+
+    public List<GameObject> RemoveHorizontalMatches() {
+        int numRemoved = 0;
+        List<GameObject> horizRemoved = new List<GameObject>();
+
+        //cycle through column first... 
+        for (int x = 0; x < gameManager.gridWidth; x++) {
+            //then row...
+            for (int y = 0; y < gameManager.gridHeight; y++) {
+
+                //stop at column(gridWidth - 2) because this is minimum column
+                //to check for 3-sprite match
+                if (x < gameManager.gridWidth - 2) {
+
+                    //Call GetHorizontalMatchLength to get the length of the match
+                    int horizonMatchLength = GetHorizontalMatchLength(x, y);
+
+                    //Match must be 3 or more...
+                    if (horizonMatchLength > 2) {
+
+                        //...to go through and delete each sprite in this match
+                        for (int i = x; i < x + horizonMatchLength; i++) {
+                            GameObject token = gameManager.gridArray[i, y];
+
+                            horizRemoved.Add(token);
+
+                            gameManager.gridArray[i, y] = null;
+                            //record number of items removed
+                            numRemoved++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return horizRemoved;
+    }
+
+   
 }
+

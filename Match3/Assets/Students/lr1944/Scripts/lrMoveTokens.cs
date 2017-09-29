@@ -49,9 +49,9 @@ public class lrMoveTokens : MoveTokensScript {
 
 		((lrGameManager)gameManager).RotateToken (exchangeToken1);
 
-		exchangeToken2.transform.position = movePos2;
+		//exchangeToken2.transform.position = movePos2;
 
-		((lrGameManager)gameManager).RotateToken (exchangeToken2);
+		//((lrGameManager)gameManager).RotateToken (exchangeToken2);
 
 
 
@@ -60,16 +60,16 @@ public class lrMoveTokens : MoveTokensScript {
 
 			// Tell the grid array the new positions of each token.
 			gameManager.gridArray[(int)exchangeGridPos2.x, (int)exchangeGridPos2.y] = exchangeToken1;
-			gameManager.gridArray[(int)exchangeGridPos1.x, (int)exchangeGridPos1.y] = exchangeToken2;
+			//gameManager.gridArray[(int)exchangeGridPos1.x, (int)exchangeGridPos1.y] = exchangeToken2;
 
 			// If this exchange has not created a match, move the tokens back.
 			if(!matchManager.GridHasMatch() && userSwap){
-				SetupTokenExchange(exchangeToken1, exchangeGridPos2, exchangeToken2, exchangeGridPos1, false);
+				//SetupTokenExchange(exchangeToken1, exchangeGridPos2, exchangeToken2, exchangeGridPos1, false);
 
 				// If this exchange has created a match, reset all variables and set movement to false.
 			} else {
 				exchangeToken1 = null;
-				exchangeToken2 = null;
+				//exchangeToken2 = null;
 				move = false;
 			}
 		}
