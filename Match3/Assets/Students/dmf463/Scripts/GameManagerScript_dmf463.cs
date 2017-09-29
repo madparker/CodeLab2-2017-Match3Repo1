@@ -1,10 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManagerScript_dmf463 : GameManagerScript
 {
     protected MatchManagerScript_dmf463 dm_matchManager;
+    int matchCount = 0;
+    public string text;
+    public Text paragraph;
+    char letter;
 
     // Use this for initialization
     public override void Start()
@@ -28,6 +33,12 @@ public class GameManagerScript_dmf463 : GameManagerScript
             if (matchManager.GridHasMatch())
             {
                 //remove the matches
+                if(matchCount < text.Length)
+                {
+                    letter = text[matchCount];
+                    paragraph.text += letter;
+                    matchCount++;
+                }
                 matchManager.RemoveMatches();
             }
             else inputManager.SelectToken(); //allow token to be selected
@@ -61,26 +72,42 @@ public class GameManagerScript_dmf463 : GameManagerScript
     {
         Vector3 position = GetWorldPositionFromGridPosition(x, y);
 
-        int rnd = Random.Range(0, tokenTypes.Length);
+        GameObject token = null;
 
-        //find a random token type and add it
-        GameObject token = Instantiate(tokenTypes[rnd], position, Quaternion.identity) as GameObject;
-        token.transform.parent = parent.transform;
-        gridArray[x, y] = token;
+        //int rnd = Random.Range(0, tokenTypes.Length);
+        int rnd = Random.Range(0, 100);
+        if(rnd < 92)
+        {
+            token = Instantiate(tokenTypes[0], position, Quaternion.identity) as GameObject;
+            token.transform.parent = parent.transform;
+            gridArray[x, y] = token;
+        }
+        else
+        {
+            token = Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], position, Quaternion.identity) as GameObject;
+            token.transform.parent = parent.transform;
+            gridArray[x, y] = token;
+        }
+
+        ////find a random token type and add it
+        //GameObject token = Instantiate(tokenTypes[rnd], position, Quaternion.identity) as GameObject;
+        //token.transform.parent = parent.transform;
+        //gridArray[x, y] = token;
 
         //if there is a horizontal match, change one of the tokens
         if (x > 1 && dm_matchManager.GridHasHorizontalMatch(x - 2, y))
         {
-            rnd = (rnd + 1) % tokenTypes.Length;
-            token.GetComponent<SpriteRenderer>().sprite = (tokenTypes[rnd] as GameObject).GetComponent<SpriteRenderer>().sprite;
-
+            //rnd = (rnd + 1) % tokenTypes.Length;
+            GameObject newToken = tokenTypes[0] as GameObject;
+            token.GetComponent<SpriteRenderer>().sprite = (newToken as GameObject).GetComponent<SpriteRenderer>().sprite;
         }
 
         //do the same for vertical matches
         if (y > 1 && dm_matchManager.GridHasVerticalMatch(x, y - 2))
         {
-            rnd = (rnd + 1) % tokenTypes.Length;
-            token.GetComponent<SpriteRenderer>().sprite = (tokenTypes[rnd] as GameObject).GetComponent<SpriteRenderer>().sprite;
+            //rnd = (rnd + 1) % tokenTypes.Length;
+            GameObject newToken = tokenTypes[0] as GameObject;
+            token.GetComponent<SpriteRenderer>().sprite = (newToken as GameObject).GetComponent<SpriteRenderer>().sprite;
         }
 
     }
