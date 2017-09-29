@@ -40,6 +40,15 @@ if (match===1) {dont do anything}
 else if (GridHasHorizontalMatch != null) {match=1} 
 */
 
+protected SoundManager SM;
+protected GameManagerExtended GM;
+
+public override void Start ()
+	{
+		base.Start ();
+		SM = GetComponent<SoundManager>();
+		GM = GetComponent<GameManagerExtended>();
+	}
 
 //checking to see if there is a match anywhere on the grid
 public override bool GridHasMatch(){
@@ -119,6 +128,10 @@ public override bool GridHasMatch(){
 
 
 	public override int RemoveMatches(){
+		//GM.score += 100;
+		SM.source2.clip = SM.match;
+		SM.RandomizeVolandPitch(SM.source2);
+		SM.source2.Play();
 		int numRemoved = 0;
 
         //cycle through column first... 
@@ -154,7 +167,6 @@ public override bool GridHasMatch(){
 
 					//Match must be 3 or more...
 					if(verticalMatchLength > 2){
-	                        
 	                        //...to go through and delete each sprite in this match
 							for(int i = y; i < y + verticalMatchLength; i++){
 								GameObject token = gameManager.gridArray[x, i]; 
@@ -165,7 +177,6 @@ public override bool GridHasMatch(){
 								numRemoved++;
 							}
 						}
-
 				}
 			}
 		}
