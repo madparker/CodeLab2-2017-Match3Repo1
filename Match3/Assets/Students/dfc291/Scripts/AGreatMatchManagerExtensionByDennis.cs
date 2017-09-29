@@ -8,6 +8,7 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
     float savedLerpSpeed;
     bool lerpSpeedSaved;
 
+
     // Check to see if there is a match anywhere on the grid.
     public override bool GridHasMatch()
     {
@@ -63,6 +64,22 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
     {
         int numRemoved = 0;
 
+        if (firstMatchy)
+        {
+            List<Rigidbody2D> rigidbodies = new List<Rigidbody2D>();
+
+            foreach (SpriteRenderer spriteRenderer in FindObjectsOfType<SpriteRenderer>())
+            {
+                spriteRenderer.gameObject.AddComponent<Rigidbody2D>();
+                rigidbodies.Add(spriteRenderer.GetComponent<Rigidbody2D>());
+            }
+
+            foreach (Rigidbody2D rigidybody in rigidbodies)
+            {
+                rigidybody.AddForce(Random.insideUnitSphere * Random.Range(50f, 100f), ForceMode2D.Impulse);
+            }
+        }
+
         // Cycle through the grid.
         for (int x = 0; x < gameManager.gridWidth; x++)
         {
@@ -72,14 +89,14 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
                 if (x < gameManager.gridWidth - 2 || y < gameManager.gridHeight - 2)
                 {
                     // Call GetHorizontalMatchLength to get the length of the match
-                    int horizonMatchLength = GetHorizontalMatchLength(x, y);
+                    int horizontalMatchLength = GetyHorizontalyMatchyLengthy(x, y);
                     int verticalMatchLength = GetVerticalMatchLength(x, y);
 
                     // Make sure the match length was at least 3 because the name of the fucking genre is Match 3 and if we allow the player to match 2 then what kind of world are we even living in?
-                    if (horizonMatchLength > 2)
+                    if (horizontalMatchLength > 2)
                     {
                         // Go through and delete each sprite in this match
-                        for (int i = x; i < x + horizonMatchLength; i++)
+                        for (int i = x; i < x + horizontalMatchLength; i++)
                         {
                             GameObject token = gameManager.gridArray[i, y];
                             Destroy(token);
@@ -114,6 +131,48 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
     }
 
 
+    public int GetyHorizontalyMatchyLengthy(int x, int y)
+    {
+        int matchLength = 1;
+
+        GameObject first = gameManager.gridArray[x, y];
+
+        if (first != null)
+        {
+            //null check, then get first sprite
+            SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
+
+            //evaluate along subsequent columns in this row to get match length
+            for (int i = x + 1; i < gameManager.gridWidth; i++)
+            {
+                GameObject other = gameManager.gridArray[i, y];
+
+                if (other != null)
+                {
+                    SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
+
+                    if (sr1.sprite.name == sr2.sprite.name/* && !sr1.sprite.name.Contains("Locked") && !sr2.sprite.name.Contains("Locked")*/)
+                    {
+                        matchLength++;
+                    }
+                    else
+                    {
+                        //break out of loop if sprites inequal...
+                        break;
+                    }
+                }
+                else
+                {
+                    //break immediately if null...
+                    break;
+                }
+            }
+        }
+        //... then return the length of the match
+        return matchLength;
+    }
+
+
     public int GetVerticalMatchLength(int x, int y)
     {
         int matchLength = 1;
@@ -136,7 +195,7 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
                     SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
 
                     // If they do match, increase the return value by one.
-                    if (sr1.sprite.name == sr2.sprite.name)
+                    if (sr1.sprite.name == sr2.sprite.name/* && !sr1.sprite.name.Contains("Locked") && !sr2.sprite.name.Contains("Locked")*/)
                     {
                         matchLength++;
                     }

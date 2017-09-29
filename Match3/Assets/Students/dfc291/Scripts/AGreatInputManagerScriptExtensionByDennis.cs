@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AGreatInputManagerScriptExtensionByDennis : InputManagerScript {
 
+
     public override void SelectToken()
     {
         if (Input.GetMouseButtonDown(0))
@@ -17,7 +18,7 @@ public class AGreatInputManagerScriptExtensionByDennis : InputManagerScript {
 
             if (collider != null)
             {
-                if (selected == null)
+                if (selected == null && !collider.gameObject.GetComponent<SpriteRenderer>().name.Contains("Locked"))
                 {
                     //select the thing the mouse is pointed at
                     selected = collider.gameObject;
@@ -39,7 +40,7 @@ public class AGreatInputManagerScriptExtensionByDennis : InputManagerScript {
                         && Mathf.Abs(pos1.y - pos2.y) <= 1)
                     {
                         //setup token exchange will try to swap the two items; if this doesn't make a match, move them back
-                        moveManager.SetupTokenExchange(selected, pos1, collider.gameObject, pos2, true);
+                        FindObjectOfType<AGreatMoveTokensScriptExtensionByDennis>().SetupyTokenyExchangey(selected, pos1, collider.gameObject, pos2, true);
                     }
 
                     selected = null;
