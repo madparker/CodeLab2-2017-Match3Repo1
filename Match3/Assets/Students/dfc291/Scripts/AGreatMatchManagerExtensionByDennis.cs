@@ -37,10 +37,14 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
             for (int y = 0; y < gameManager.gridHeight; y++)
             {
                 // Don't need to evaluate last two rows or columns, because they might not even actually exist and that would be bad.
-                if (x < gameManager.gridWidth - 2 && y < gameManager.gridHeight - 2)
+                if (x < gameManager.gridWidth - 2)
                 {
-                    // Once we've found a match, match will always return true
-                    match = match || GridHasHorizontalMatch(x, y) || GridHasVerticalMatch(x, y);
+                    match = match || GridHasHorizontalMatch(x, y);
+                }
+
+                if (y < gameManager.gridHeight - 2)
+                {
+                    match = match || GridHasVerticalMatch(x, y);
                 }
             }
         }
@@ -132,7 +136,7 @@ public class AGreatMatchManagerExtensionByDennis : MatchManagerScript {
                     SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
 
                     // If they do match, increase the return value by one.
-                    if (sr1.sprite == sr2.sprite)
+                    if (sr1.sprite.name == sr2.sprite.name)
                     {
                         matchLength++;
                     }
