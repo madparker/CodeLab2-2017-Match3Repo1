@@ -2,123 +2,160 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chao_MatchManagerScript : MatchManagerScript {
+public class Chao_MatchManagerScript : MonoBehaviour {
 
-	public override bool GridHasMatch ()
-	{
-		bool match = false;
+	protected Chao_GameManagerScript gameManager;
+	public int Score;
+	public GameObject ScoreText;
 
-		for(int x = 0; x < gameManager.gridWidth; x++){
+	public virtual void Start (){
+		
+		gameManager = GetComponent<Chao_GameManagerScript>();
+
+	}
+
+	//check if the grid has match, if it does, remove them
+	public bool GridHasMatch (){
+		
+		//a list to put all the removeable tokens
+		List<int[]> toBeRemovedTotal = new List<int[]>();
+
+		//check if the whole grid has match, if it does, put them in the list
+		for(int x = 0; x < gameManager.gridWidth ; x++){
 			
 			for(int y = 0; y < gameManager.gridHeight ; y++){
 
-				if(x < gameManager.gridWidth - 2){
-					match = match || GridHasHorizontalMatch(x, y);
+				foreach (var token in GridMatch (x,y)) {
+					toBeRemovedTotal.Add (token);
 				}
-				if(y < gameManager.gridHeight - 2){
-					match = match || GridHasVerticalMatch (x, y);
-				}
+
 			}
 		}
 
-		return match;
-	}
+		//if there are tokens in the list, remove them.
+		if (toBeRemovedTotal.Count > 0) {
+			//for each token in the list, remove them by send the (x,y) to the removematches
+			foreach (var i in toBeRemovedTotal) {
+				RemoveMatches (i [0], i [1]);
+			}
 
-	public bool GridHasVerticalMatch(int x, int y){
-		//reference to 3 game objects along x row, starting from y
-		GameObject token1 = gameManager.gridArray[x , y+0];
-		GameObject token2 = gameManager.gridArray[x , y+1];
-		GameObject token3 = gameManager.gridArray[x , y+2];
-
-		if(token1 != null && token2 != null && token3 != null){
-			//after null check, evaluate match among the three sprites
-			SpriteRenderer sr1 = token1.GetComponent<SpriteRenderer>();
-			SpriteRenderer sr2 = token2.GetComponent<SpriteRenderer>();
-			SpriteRenderer sr3 = token3.GetComponent<SpriteRenderer>();
-
-			return (sr1.sprite == sr2.sprite && sr2.sprite == sr3.sprite);
-		} else {
-			return false;
+			Score = Score + toBeRemovedTotal.Count;
+			ScoreText.gameObject.GetComponent<TextMesh> ().text = "Score: " + Score;
 		}
+
+		//return true if it has match
+		return toBeRemovedTotal.Count > 0;
+
 	}
 
+	//GridMatch return as a list
+	public List<int[]> GridMatch(int x, int y) {
+			
+		//a list of the tokens that have a match
+		List<int[]> toBeRemoved = new List<int[]>();
+		GameObject token1 = gameManager.gridArray[x, y];
+		GameObject token2;
+		//Check how many tokens above match with it
+		int Upmatch = 0;
+		for(int i = 1; i< gameManager.gridHeight - y ; i++){
+			token2  = gameManager.gridArray[x, y + i];
 
-	public int GetVerticalMatchLength(int x, int y){
-		
-		int matchLength = 1;
+			if (token1 != null && token2 != null) {
 
-		GameObject first = gameManager.gridArray[x, y];
-
-		if(first != null){
-			SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
-
-			for(int i = y + 1; i < gameManager.gridHeight; i++){
-				
-				GameObject other = gameManager.gridArray[x, i];
-
-				if(other != null){
-					SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
-
-					if(sr1.sprite == sr2.sprite){
-						matchLength++;
-					} 
-					else { 
-						break;
-					}
+				if (string.Equals(token1.gameObject.tag, token2.gameObject.tag)) {
+//					Debug.Log ("token1:" + token1.gameObject.tag);
+//					Debug.Log ("token2:" + token2.gameObject.tag);
+					
+					Upmatch = i;
 				} 
 				else {
+				
+					break;
+				}
+			}
+
+		}
+		//Check how many tokens under match with it
+		int Downmatch = 0;
+		for (int i = 1; i < y + 1; i++) {
+
+		token2 = gameManager.gridArray [x, y - i];
+
+		if (token1 != null && token2 != null) {
+			if (string.Equals (token1.gameObject.tag, token2.gameObject.tag)) {
+			
+				Downmatch = i;
+			} else {
+				break;
+			}
+		}
+	}
+		//Check how many tokens on left match with it
+		int Leftmatch = 0;
+		for(int i = 1; i< x + 1; i++){
+
+			token2 = gameManager.gridArray[x - i, y];
+
+			if (token1 != null && token2 != null) {
+				if (string.Equals (token1.gameObject.tag, token2.gameObject.tag)) {
+					Leftmatch = i;
+				} else {
 					break;
 				}
 			}
 		}
+		//Check how many tokens on left match with it
+		int Rightmatch = 0;
+		for(int i = 1; i< gameManager.gridWidth-x; i++){
 
-		return matchLength;
-	}
+			token2 = gameManager.gridArray[x + i, y];
 
-	public override int RemoveMatches ()
-	{
-
-		int numRemoved = 0;
-
-		for(int x = 0; x < gameManager.gridWidth; x++){
-
-			for(int y = 0; y < gameManager.gridHeight ; y++){
-
-				if(x < gameManager.gridWidth - 2){
-
-					int horizonMatchLength = GetHorizontalMatchLength(x, y);
-
-					if(horizonMatchLength > 2){
-
-						for(int i = x; i < x + horizonMatchLength; i++){
-							GameObject token = gameManager.gridArray[i, y]; 
-							Destroy(token);
-
-							gameManager.gridArray[i, y] = null;
-							numRemoved++;
-						}
-					}
-				}
-
-				if(y < gameManager.gridHeight - 2){
-
-					int verticalMatchLength = GetVerticalMatchLength (x, y);
-
-					if(verticalMatchLength > 2){
-
-						for(int i = y; i < y + verticalMatchLength; i++){
-							GameObject token = gameManager.gridArray[x, i]; 
-							Destroy(token);
-
-							gameManager.gridArray[x, i] = null;
-							numRemoved++;
-						}
-					}
+			if (token1 != null && token2 != null) {
+				if (string.Equals (token1.gameObject.tag, token2.gameObject.tag)) {
+					Rightmatch = i;
+				} else {
+					break;
 				}
 			}
 		}
+			
+	
+		//if match more than 2, then add them to the list
+		if ((Upmatch + Downmatch) > 1) {	
 
-		return numRemoved;
+			for (int i = 0; i <= Upmatch + Downmatch; i++) {
+//					RemoveMatches (x, y - Downmatch + i);
+			toBeRemoved.Add(new int[]{x, y - Downmatch + i});
+			}
+
+		}
+		//if match more than 2, then add them to the list
+		if ((Leftmatch + Rightmatch) > 1) {
+//			Debug.Log (Leftmatch);
+//			Debug.Log (Rightmatch);
+			for (int i = 0; i <= Leftmatch + Rightmatch; i++) {
+//					RemoveMatches (x -Leftmatch + i, y);
+			toBeRemoved.Add(new int[]{x -Leftmatch + i, y});
+			}
+			
+		}
+		//return the list	
+		return toBeRemoved;
+
+	}
+		
+
+	public void RemoveMatches (int x, int y){
+
+
+		GameObject token = gameManager.gridArray[x, y]; 
+
+		if(token != null){
+			Destroy(token);
+		}
+
+		gameManager.gridArray[x, y] = null;
+
 	}
 
 

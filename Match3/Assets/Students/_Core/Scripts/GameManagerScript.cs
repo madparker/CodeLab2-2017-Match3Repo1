@@ -83,7 +83,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	//setting world position
-	public Vector2 GetWorldPositionFromGridPosition(int x, int y){
+	public virtual Vector2 GetWorldPositionFromGridPosition(int x, int y){
 		return new Vector2(
 			(x - gridWidth/2) * tokenSize,
 			(y - gridHeight/2) * tokenSize);

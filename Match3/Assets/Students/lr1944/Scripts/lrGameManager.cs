@@ -9,7 +9,7 @@ public class lrGameManager : GameManagerScript {
 
 
 	public override void Start () {
-		tokenTypes = (Object[])Resources.LoadAll("_Core/Tokens/"); //grabbing prefabs
+		tokenTypes = (Object[])Resources.LoadAll("lr1944/Tokens/"); //grabbing prefabs
 		gridArray = new GameObject[gridWidth, gridHeight]; //creating the grid
 
 		matchManager = GetComponent<MatchManagerScript>(); //assigning scripts to variables
@@ -49,6 +49,10 @@ public class lrGameManager : GameManagerScript {
 		token.transform.parent = parent.transform;
 		gridArray[x, y] = token;
 
+
+
+		RotateToken (token);
+
 		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
 			rnd = (rnd + 1) % tokenTypes.Length;
 			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
@@ -60,38 +64,30 @@ public class lrGameManager : GameManagerScript {
 			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
 		}
 
-//		if (x > 1) {
-//			
-//			for (lrMatchMan.GridHasHorizontalMatch(x,y)) {
-//				Destroy (token);
-//				gridArray [x, y] = null;
-//				GameObject tokenNew = 
-//					//grabbing random token types
-//					Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 
-//						position, 
-//						Quaternion.identity) as GameObject;
-//				token.transform.parent = parent.transform;
-//				gridArray[x, y] = tokenNew;
-//			}
-//			
-//		}
-//
-//		if (y > 1) {
-//			for (lrMatchMan.GridHasVerticalMatch(x,y)) {
-//				Destroy (token);
-//				gridArray [x, y] = null;
-//				GameObject tokenNew = 
-//					//grabbing random token types
-//					Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 
-//						position, 
-//						Quaternion.identity) as GameObject;
-//				token.transform.parent = parent.transform;
-//				gridArray[x, y] = tokenNew;
-//			}
-//		}
+		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
+			rnd = (rnd + 1) % tokenTypes.Length;
+			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
 
+		}
 
 	}
+
+	//setting world position
+	public override Vector2 GetWorldPositionFromGridPosition(int x, int y){
+		return new Vector2(
+			(x - gridWidth/2f) * tokenSize,
+			(y - gridHeight/2f) * tokenSize
+		);
+	}
+
+	public void RotateToken (GameObject token) {
+		float xPos = token.transform.position.x;
+		token.transform.position = Vector3.up*token.transform.position.y + new Vector3 (0, 0, -10);
+		token.transform.RotateAround (new Vector3 (0,token.transform.position.y,0), Vector3.up, (360f/gridWidth) * xPos);
+//		Debug.Log (x + " " + ((360f / gridWidth) * x));
+	}
+
+
 
 
 }
