@@ -15,7 +15,7 @@ public class MoveTokensScript : MonoBehaviour {
 	protected bool userSwap;
 
 	protected GameObject exchangeToken1;
-	GameObject exchangeToken2;
+	protected GameObject exchangeToken2;
 
 	protected Vector2 exchangeGridPos1;
 	protected Vector2 exchangeGridPos2;
