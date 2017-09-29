@@ -17,8 +17,8 @@ public class MoveTokensScript : MonoBehaviour {
 	protected GameObject exchangeToken1;
 	GameObject exchangeToken2;
 
-	Vector2 exchangeGridPos1;
-	Vector2 exchangeGridPos2;
+	protected Vector2 exchangeGridPos1;
+	protected Vector2 exchangeGridPos2;
 
 
     public virtual void Start () {
