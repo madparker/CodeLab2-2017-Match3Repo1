@@ -39,7 +39,7 @@ public class lrGameManager : GameManagerScript {
 
 	//adds random token types to specific positions in the grid
 	public void AddTokenToPosInGridNew(int x, int y, GameObject parent){
-		Vector3 position = GetWorldPositionFromGridPosition(x, y); 
+		Vector3 position = GetWorldPositionFromGridPositionNew(x, y); 
 
 		int rnd = Random.Range (0, tokenTypes.Length);
 			
@@ -48,6 +48,8 @@ public class lrGameManager : GameManagerScript {
 			Instantiate(tokenTypes[rnd], position, Quaternion.identity) as GameObject;
 		token.transform.parent = parent.transform;
 		gridArray[x, y] = token;
+
+		RotateToken (token, x);
 
 		if (x>1 && lrMatchMan.GridHasHorizontalMatch(x-2,y)) {
 			rnd = (rnd + 1) % tokenTypes.Length;
@@ -60,37 +62,19 @@ public class lrGameManager : GameManagerScript {
 			token.GetComponent<SpriteRenderer> ().sprite = (tokenTypes [rnd] as GameObject).GetComponent<SpriteRenderer> ().sprite;
 		}
 
-//		if (x > 1) {
-//			
-//			for (lrMatchMan.GridHasHorizontalMatch(x,y)) {
-//				Destroy (token);
-//				gridArray [x, y] = null;
-//				GameObject tokenNew = 
-//					//grabbing random token types
-//					Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 
-//						position, 
-//						Quaternion.identity) as GameObject;
-//				token.transform.parent = parent.transform;
-//				gridArray[x, y] = tokenNew;
-//			}
-//			
-//		}
-//
-//		if (y > 1) {
-//			for (lrMatchMan.GridHasVerticalMatch(x,y)) {
-//				Destroy (token);
-//				gridArray [x, y] = null;
-//				GameObject tokenNew = 
-//					//grabbing random token types
-//					Instantiate(tokenTypes[Random.Range(0, tokenTypes.Length)], 
-//						position, 
-//						Quaternion.identity) as GameObject;
-//				token.transform.parent = parent.transform;
-//				gridArray[x, y] = tokenNew;
-//			}
-//		}
+	}
 
+	//setting world position
+	public Vector3 GetWorldPositionFromGridPositionNew(int x, int y){
+		return new Vector3(
+			(x - gridWidth/2) * tokenSize,
+			(y - gridHeight/2) * tokenSize,
+			-10
+		);
+	}
 
+	void RotateToken (GameObject token, int x) {
+		token.transform.RotateAround (new Vector3 (0,0,0), Vector3.up, (360/gridWidth) * x);
 	}
 
 
